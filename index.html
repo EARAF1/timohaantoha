@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тимоха vs Антон — файтинг</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0710;
+    --surface: #161020;
+    --text: #f0ecf8;
+    --muted: #9a90b0;
+    --pink: #ff4d8d;
+    --purple: #a855f7;
+    --gold: #fbbf24;
+    --green: #22c55e;
+    --red: #ef4444;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 0%, #2a1a3a, #0a0710 60%);
+  }
+
+  #game-wrapper {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 10;
+  }
+  .screen.active { display: flex; }
+
+  /* ---------- MENU ---------- */
+  #menu {
+    background: radial-gradient(circle at 50% 50%, rgba(255,77,141,0.15), transparent 60%);
+    text-align: center;
+  }
+
+  #menu h1 {
+    font-size: clamp(2rem, 7vw, 4rem);
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--pink), var(--gold), var(--purple));
+    background-size: 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 4s linear infinite;
+    margin-bottom: 12px;
+  }
+  @keyframes shine { to { background-position: 200%; } }
+
+  #menu .subtitle {
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin-bottom: 36px;
+    font-style: italic;
+  }
+
+  .characters {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .char-card {
+    background: var(--surface);
+    border: 2px solid var(--muted);
+    border-radius: 20px;
+    padding: 22px;
+    width: 220px;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-align: center;
+  }
+  .char-card:hover {
+    border-color: var(--pink);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(255,77,141,0.3);
+  }
+  .char-card.selected {
+    border-color: var(--pink);
+    box-shadow: 0 0 30px rgba(255,77,141,0.5);
+    transform: translateY(-4px);
+  }
+
+  .char-preview {
+    height: 140px;
+    margin-bottom: 14px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .char-preview.fat::before {
+    content: '';
+    display: block;
+    width: 90px;
+    height: 110px;
+    background: radial-gradient(circle at 40% 40%, #6aa8ea, #2d5a8c);
+    border-radius: 50%;
+    box-shadow: inset -10px -10px 20px rgba(0,0,0,0.3), inset 10px 10px 20px rgba(255,255,255,0.2);
+    position: relative;
+  }
+  .char-preview.fat::after {
+    content: '';
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 48px;
+    background: #f5c5a3;
+    border-radius: 50%;
+    box-shadow: inset -4px -4px 8px rgba(0,0,0,0.2);
+  }
+
+  .char-preview.muscle::before {
+    content: '';
+    display: block;
+    width: 88px;
+    height: 128px;
+    background: linear-gradient(180deg, #ef4f5c, #b71c2c);
+    clip-path: polygon(8% 0%, 92% 0%, 76% 100%, 24% 100%);
+    box-shadow: inset -15px 0 30px rgba(0,0,0,0.3);
+    position: relative;
+  }
+  .char-preview.muscle::after {
+    content: '';
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px;
+    height: 44px;
+    background: #e8b088;
+    border-radius: 50%;
+    box-shadow: inset -4px -4px 8px rgba(0,0,0,0.2);
+  }
+
+  .char-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+  }
+  .char-card p {
+    font-size: 0.85rem;
+    color: var(--muted);
